@@ -1,0 +1,232 @@
+Industry,Year,injury_frequency_rate
+Air Transportation,2020,39.7
+Air Transportation,2019,36.47
+Air Transportation,2018,39.75
+Air Transportation,2017,45.4
+Air Transportation,2016,65.26
+Air Transportation,2015,54
+Air Transportation,2014,55.06
+Air Transportation,2013,49.21
+Air Transportation,2012,72.15
+Air Transportation,2011,80.2
+Air Transportation,2010,66.09
+Air Transportation,2009,75.63
+Air Transportation,2008,69.68
+Banking/Banks,2020,4.07
+Banking/Banks,2019,4.42
+Banking/Banks,2018,3.58
+Banking/Banks,2017,3.88
+Banking/Banks,2016,3.81
+Banking/Banks,2015,3.93
+Banking/Banks,2014,4.63
+Banking/Banks,2013,4.53
+Banking/Banks,2012,4.22
+Banking/Banks,2011,3.33
+Banking/Banks,2010,3.17
+Banking/Banks,2009,3.71
+Banking/Banks,2008,4.16
+"Broadcasting (Television, Radio, Internet)",2020,12.29
+"Broadcasting (Television, Radio, Internet)",2019,15.74
+"Broadcasting (Television, Radio, Internet)",2018,14.86
+"Broadcasting (Television, Radio, Internet)",2017,13.63
+"Broadcasting (Television, Radio, Internet)",2016,12.65
+"Broadcasting (Television, Radio, Internet)",2015,13.28
+"Broadcasting (Television, Radio, Internet)",2014,16.55
+"Broadcasting (Television, Radio, Internet)",2013,11.81
+"Broadcasting (Television, Radio, Internet)",2012,12.57
+"Broadcasting (Television, Radio, Internet)",2011,14.49
+"Broadcasting (Television, Radio, Internet)",2010,12.17
+"Broadcasting (Television, Radio, Internet)",2009,12.31
+"Broadcasting (Television, Radio, Internet)",2008,14.39
+Communications,2020,8.36
+Communications,2019,10.59
+Communications,2018,11.79
+Communications,2017,12.81
+Communications,2016,13.91
+Communications,2015,12.06
+Communications,2014,9.74
+Communications,2013,13.68
+Communications,2012,12.44
+Communications,2011,10.35
+Communications,2010,9.27
+Communications,2009,11.69
+Communications,2008,12.04
+Crown Corporations,2017,10.61
+Crown Corporations,2016,11.39
+Crown Corporations,2015,16.32
+Crown Corporations,2014,13.2
+Crown Corporations,2013,15.12
+Crown Corporations,2012,15.89
+Crown Corporations,2011,10.31
+Crown Corporations,2010,15.07
+Crown Corporations,2009,13.18
+Crown Corporations,2008,14.44
+Energy/Mining/Mineral Processing,2020,4.93
+Energy/Mining/Mineral Processing,2019,6.16
+Energy/Mining/Mineral Processing,2018,26.64
+Energy/Mining/Mineral Processing,2017,6.29
+Energy/Mining/Mineral Processing,2016,19.51
+Energy/Mining/Mineral Processing,2015,21.57
+Energy/Mining/Mineral Processing,2014,23.25
+Energy/Mining/Mineral Processing,2013,23.54
+Energy/Mining/Mineral Processing,2012,33.11
+Energy/Mining/Mineral Processing,2011,55.05
+Energy/Mining/Mineral Processing,2010,61.97
+Energy/Mining/Mineral Processing,2009,44.41
+Energy/Mining/Mineral Processing,2008,47.42
+Federal Public Services/Public Service Departments/Crown Corporations,2020,12.65
+Federal Public Services/Public Service Departments/Crown Corporations,2019,17.43
+Federal Public Services/Public Service Departments/Crown Corporations,2018,15.98
+Public Service Departments,2017,16.59
+Public Service Departments,2016,18.28
+Public Service Departments,2015,16.97
+Public Service Departments,2014,16.85
+Public Service Departments,2013,18.01
+Public Service Departments,2012,16.47
+Public Service Departments,2011,16.81
+Public Service Departments,2010,18.14
+Public Service Departments,2009,17.81
+Public Service Departments,2008,17.62
+"Feed, Flour and Seed",2020,37.46
+"Feed, Flour and Seed",2019,41.76
+"Feed, Flour and Seed",2018,45.06
+"Feed, Flour and Seed",2017,44.86
+"Feed, Flour and Seed",2016,43.95
+"Feed, Flour and Seed",2015,40.86
+"Feed, Flour and Seed",2014,44.54
+"Feed, Flour and Seed",2013,44.98
+"Feed, Flour and Seed",2012,48.25
+"Feed, Flour and Seed",2011,51.68
+"Feed, Flour and Seed",2010,49.29
+"Feed, Flour and Seed",2009,52.13
+"Feed, Flour and Seed",2008,57.37
+Grain Handling/Grain Elevators,2020,23.1
+Grain Handling/Grain Elevators,2019,17.13
+Grain Handling/Grain Elevators,2018,21.34
+Grain Handling/Grain Elevators,2017,21.46
+Grain Handling/Grain Elevators,2016,24.31
+Grain Handling/Grain Elevators,2015,26.5
+Grain Handling/Grain Elevators,2014,25.36
+Grain Handling/Grain Elevators,2013,34.16
+Grain Handling/Grain Elevators,2012,28.4
+Grain Handling/Grain Elevators,2011,21.6
+Grain Handling/Grain Elevators,2010,20.21
+Grain Handling/Grain Elevators,2009,26.73
+Grain Handling/Grain Elevators,2008,29.88
+Indigenous,2020,15.66
+Indigenous,2019,15.31
+Indigenous,2018,17.21
+Indigenous,2017,18.9
+Indigenous,2016,20.63
+Indigenous,2015,16.05
+Indigenous,2014,15.07
+Indigenous,2013,20.91
+Indigenous,2012,17.78
+Indigenous,2011,20.25
+Indigenous,2010,17.64
+Indigenous,2009,16.03
+Indigenous,2008,21.1
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2020,31.87
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2019,24.99
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2018,3.64
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2017,36.99
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2016,26.88
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2015,34.67
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2014,38.29
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2013,30.89
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2012,32.36
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2011,41.82
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2010,23.89
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2009,31.69
+"Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)",2008,44.05
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2020,18.9
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2019,17.83
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2018,43.74
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2017,54.43
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2016,62.6
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2015,66.05
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2014,61.96
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2013,59.51
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2012,140.83
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2011,142.64
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2010,141.83
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2009,109.15
+Long shoring/Stevedoring/Port/Harbour Operations/Pilotage,2008,126.88
+Pipeline Transportation,2020,2.24
+Pipeline Transportation,2019,1.54
+Pipeline Transportation,2018,3.25
+Pipeline Transportation,2017,2.37
+Pipeline Transportation,2016,2.44
+Pipeline Transportation,2015,2.52
+Pipeline Transportation,2014,4.01
+Pipeline Transportation,2013,3.25
+Pipeline Transportation,2012,3.19
+Pipeline Transportation,2011,8.61
+Pipeline Transportation,2010,3.22
+Pipeline Transportation,2009,4.44
+Pipeline Transportation,2008,3.79
+Postal Services/Postal Contractors,2020,34.32
+Postal Services/Postal Contractors,2019,50.03
+Postal Services/Postal Contractors,2018,55.68
+Postal Services/Postal Contractors,2017,59.01
+Postal Services/Postal Contractors,2016,60.41
+Postal Services/Postal Contractors,2015,63.63
+Postal Services/Postal Contractors,2014,64.78
+Postal Services/Postal Contractors,2013,98.03
+Postal Services/Postal Contractors,2012,98.09
+Postal Services/Postal Contractors,2011,86.02
+Postal Services/Postal Contractors,2010,70.71
+Postal Services/Postal Contractors,2009,74.7
+Postal Services/Postal Contractors,2008,87.41
+Rail Transportation,2020,9.99
+Rail Transportation,2019,14.89
+Rail Transportation,2018,12.87
+Rail Transportation,2017,25.09
+Rail Transportation,2016,27.9
+Rail Transportation,2015,25.46
+Rail Transportation,2014,15.54
+Rail Transportation,2013,27.81
+Rail Transportation,2012,29.86
+Rail Transportation,2011,21.19
+Rail Transportation,2010,20.13
+Rail Transportation,2009,33.81
+Rail Transportation,2008,48.24
+Road Transportation,2020,35
+Road Transportation,2019,42.29
+Road Transportation,2018,40.95
+Road Transportation,2017,38.36
+Road Transportation,2016,36.13
+Road Transportation,2015,37.35
+Road Transportation,2014,42.5
+Road Transportation,2013,43.67
+Road Transportation,2012,41.96
+Road Transportation,2011,45.64
+Road Transportation,2010,42.45
+Road Transportation,2009,46.55
+Road Transportation,2008,49.35
+Water Transportation (Shipping and Ferries),2020,20.92
+Water Transportation (Shipping and Ferries),2019,21.64
+Water Transportation (Shipping and Ferries),2018,27.58
+Water Transportation (Shipping and Ferries),2017,27.92
+Water Transportation (Shipping and Ferries),2016,31.64
+Water Transportation (Shipping and Ferries),2015,33.8
+Water Transportation (Shipping and Ferries),2014,46.29
+Water Transportation (Shipping and Ferries),2013,46.91
+Water Transportation (Shipping and Ferries),2012,44.29
+Water Transportation (Shipping and Ferries),2011,52.97
+Water Transportation (Shipping and Ferries),2010,61
+Water Transportation (Shipping and Ferries),2009,65.63
+Water Transportation (Shipping and Ferries),2008,71.3
+CANADA,2020,17.03
+CANADA,2019,21.24
+CANADA,2018,21.4
+CANADA,2017,22.01
+CANADA,2016,24.55
+CANADA,2015,23.48
+CANADA,2014,24.26
+CANADA,2013,25.35
+CANADA,2012,27.63
+CANADA,2011,26.12
+CANADA,2010,25.11
+CANADA,2009,27.3
+CANADA,2008,30.03

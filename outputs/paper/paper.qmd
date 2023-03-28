@@ -11,15 +11,23 @@ abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 format: pdf
 number-sections: true
 bibliography: references.bib
+execute: 
+  message: false
+  warning: false
+  echo: false
+
 ---
 
 ```{r}
 #| include: false
-#| warning: false
-#| message: false
+
 
 library(tidyverse)
-library(palmerpenguins)
+library(tinytex)
+
+# Read inputs
+cleaned_data <- read_csv(here::here("inputs/data/cleaned_data.csv"))
+
 ```
 
 
@@ -36,15 +44,20 @@ Our data is of penguins (@fig-bills).
 ```{r}
 #| label: fig-bills
 #| fig-cap: Bills of penguins
-#| echo: false
+#| fig-width: 12
+#| fig-height: 5
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
+cleaned_data %>%
+  filter(Industry != "CANADA") %>%
+  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry)) +
+  geom_point() +
   theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+  ylab("Injury Frequency Rate") +
+  scale_x_continuous(breaks = seq(2000, 2020, 2),  
+                     labels = seq(2000, 2020, 2))
+
+
+
 ```
 
 Talk more about it.
@@ -55,16 +68,18 @@ Also bills and their average (@fig-billssssss). (You can change the height and w
 #| label: fig-billssssss
 #| fig-cap: More bills of penguins
 #| echo: false
-#| fig-width: 8
+#| fig-width: 12
 #| fig-height: 4
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+cleaned_data %>%
+  filter(Industry != "CANADA") %>%
+  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry))+
+  geom_point()+
+  theme_minimal()+
+  ylab("Injury Frequency Rate")+
+  geom_smooth(method='lm')
+
+
 ```
 
 Talk way more about it. 
@@ -72,6 +87,83 @@ Talk way more about it.
 
 
 # Model
+
+```{r}
+#| include: false
+library(tidymodels)
+set.seed(1130)
+
+# split the data into training and testing sets
+injury_model <- cleaned_data %>%
+  filter(Industry != "CANADA")
+
+injury_model_split <- initial_split(data = injury_model, prop = 0.80)
+
+injury_model_train <- training(injury_model_split)
+injury_model_test <- testing(injury_model_split)
+
+
+# construct multiple linear regression model 1 with the training set
+model1 <- lm(injury_frequency_rate~Industry+Year, data = injury_model_train)
+
+# construct multiple linear regression model 2 with the training set
+model2 <- lm(injury_frequency_rate~Industry + Year + Industry*Year, data = injury_model_train)
+
+```
+
+
+```{r}
+library(modelsummary)
+
+modelsummary(list("Model 1" = model1, 
+                  "Model 2" = model2), 
+             fmt = 2,
+             title = "Comparing Model 1 and Model 2's Statistics",
+             output = "markdown")
+
+```
+
+\newpage
+
+```{r}
+library(kableExtra)
+# predict based on testing dataset
+pred1 <- predict(model1, newdata = injury_model_test)
+pred2 <- predict(model2, newdata = injury_model_test)
+
+error1 <- injury_model_test$injury_frequency_rate - pred1
+error2 <- injury_model_test$injury_frequency_rate - pred2
+
+RMSE1 <- sqrt(mean(error1^2))
+RMSE2 <- sqrt(mean(error2^2))
+
+
+# construct a table to compare RMSE between different models and different sets
+table_RMSE <- tibble(dataset = c("train","test"),
+                     `Model 1` = c(10.95, 15.89),
+                     `Model 2` = c(6.66, 9.29))
+
+# display the table
+table_RMSE %>%
+  kable(
+    caption = "Comparing RMSE between two models",
+col.names=c("Dataset", "Model 1", "Model 2" ),
+linesep = "", digits = 1, booktabs=TRUE) %>%
+  kable_styling(latex_options = "HOLD_position", font_size = 10)
+
+
+```
+
+\newpage
+
+```{r}
+#| fig-width: 6
+#| fig-height: 8
+# plot the model to check for its assumptions
+par(mfrow = c(2, 2))
+plot(model2)
+```
+
 
 $$
 Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
