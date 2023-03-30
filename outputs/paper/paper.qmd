@@ -42,6 +42,18 @@ You can and should cross-reference sections and sub-sections. For instance, @sec
 Our data is of penguins (@fig-bills).
 
 ```{r}
+cleaned_data %>%
+  filter(Industry == "CANADA") %>%
+  ggplot(aes(x= Year, y= injury_frequency_rate)) +
+  geom_line(color = "blue")+
+  theme_minimal()+
+  ylab("Injury Frequency Rate") +
+  scale_x_continuous(breaks = seq(2000, 2020, 2),  
+                     labels = seq(2000, 2020, 2))
+```
+
+
+```{r}
 #| label: fig-bills
 #| fig-cap: Bills of penguins
 #| fig-width: 12
@@ -64,29 +76,33 @@ Talk more about it.
 
 Also bills and their average (@fig-billssssss). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work.)
 
-```{r}
-#| label: fig-billssssss
-#| fig-cap: More bills of penguins
-#| echo: false
-#| fig-width: 12
-#| fig-height: 4
 
-cleaned_data %>%
-  filter(Industry != "CANADA") %>%
-  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry))+
-  geom_point()+
-  theme_minimal()+
-  ylab("Injury Frequency Rate")+
-  geom_smooth(method='lm')
-
-
-```
 
 Talk way more about it. 
 
 
 
+
+\newpage
+
 # Model
+
+
+$$
+Y_{ij} = \beta_{0}+\beta_{1}Year_{i}+\beta_{2}Industry_{j}+\beta_{3}Year_{i}Industry_{j} 
+$$ {#eq-bayes}
+
+In Model @eq-bayes:
+
+- $Y_{ij}$ is the injury frequency rate in $i^{th}$ year and industry $j$.
+- $\beta_{0}$ is the coefficient for intercept.
+- $\beta_{1}$ is the coefficient for the continuous year variable.
+- $\beta_{2}$ is the coefficient corresponding to industry $j$.
+- $\beta_{3}$ is the coefficient for the interaction term between $i^{th}$ year and industry $j$.
+- The baseline of this model is year 0 and Air Transportation industry.
+
+\newpage
+
 
 ```{r}
 #| include: false
@@ -165,11 +181,6 @@ plot(model2)
 ```
 
 
-$$
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
-$$ {#eq-bayes}
-
-@eq-bayes seems useful, eh?
 
 Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
 
@@ -177,6 +188,27 @@ We can use maths by including latex between dollar signs, for instance $\theta$.
 
 
 # Results
+
+```{r}
+#| label: fig-billssssss
+#| fig-cap: More bills of penguins
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4
+
+cleaned_data %>%
+  filter(Industry != "CANADA") %>%
+  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry))+
+  geom_point()+
+  theme_minimal()+
+  ylab("Injury Frequency Rate")+
+  geom_smooth(method='lm')+
+  scale_x_continuous(breaks = seq(2000, 2020, 2),  
+                     labels = seq(2000, 2020, 2))
+
+
+
+```
 
 # Discussion
 
