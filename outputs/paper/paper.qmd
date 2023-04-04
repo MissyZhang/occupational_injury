@@ -1,5 +1,5 @@
 ---
-title: "My title"
+title: "Evolution of injury fruquency rate in Canada"
 subtitle: "My subtitle if needed"
 author: 
   - First author
@@ -24,6 +24,9 @@ execute:
 
 library(tidyverse)
 library(tinytex)
+library(modelsummary)
+library(kableExtra)
+library(dplyr)
 
 # Read inputs
 cleaned_data <- read_csv(here::here("inputs/data/cleaned_data.csv"))
@@ -72,6 +75,11 @@ cleaned_data %>%
 
 ```
 
+
+
+
+
+
 Talk more about it.
 
 Also bills and their average (@fig-billssssss). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work.)
@@ -86,23 +94,6 @@ Talk way more about it.
 \newpage
 
 # Model
-
-
-$$
-Y_{ij} = \beta_{0}+\beta_{1}Year_{i}+\beta_{2}Industry_{j}+\beta_{3}Year_{i}Industry_{j} 
-$$ {#eq-bayes}
-
-In Model @eq-bayes:
-
-- $Y_{ij}$ is the injury frequency rate in $i^{th}$ year and industry $j$.
-- $\beta_{0}$ is the coefficient for intercept.
-- $\beta_{1}$ is the coefficient for the continuous year variable.
-- $\beta_{2}$ is the coefficient corresponding to industry $j$.
-- $\beta_{3}$ is the coefficient for the interaction term between $i^{th}$ year and industry $j$.
-- The baseline of this model is year 0 and Air Transportation industry.
-
-\newpage
-
 
 ```{r}
 #| include: false
@@ -125,11 +116,139 @@ model1 <- lm(injury_frequency_rate~Industry+Year, data = injury_model_train)
 # construct multiple linear regression model 2 with the training set
 model2 <- lm(injury_frequency_rate~Industry + Year + Industry*Year, data = injury_model_train)
 
+
 ```
 
 
+$$
+Y_{ij} = \beta_{0}+\beta_{1}Year_{i}+\beta_{2}Industry_{j}+\beta_{3}Year_{i}Industry_{j} 
+$$ {#eq-bayes}
+
+In Model @eq-bayes:
+
+- $Y_{ij}$ is the injury frequency rate in $i^{th}$ year and industry $j$.
+- $\beta_{0}$ is the coefficient for intercept.
+- $\beta_{1}$ is the coefficient for the continuous year variable.
+- $\beta_{2}$ is the coefficient corresponding to industry $j$.
+- $\beta_{3}$ is the coefficient for the interaction term between $i^{th}$ year and industry $j$.
+- The baseline of this model is year 0 and Air Transportation industry.
+
+
+
+
+
+
+
+
+
+
+
+Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by  If we were interested in baseball data then could be useful. 
+
+We can use maths by including latex between dollar signs, for instance $\theta$.
+
+\newpage
+
+# Results
+
 ```{r}
-library(modelsummary)
+#| label: fig-billssssss
+#| fig-cap: More bills of penguins
+#| echo: false
+#| fig-width: 12
+#| fig-height: 6
+
+cleaned_data %>%
+  filter(Industry != "CANADA") %>%
+  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry))+
+  geom_point()+
+  theme_minimal()+
+  ylab("Injury Frequency Rate")+
+  geom_smooth(method='lm')+
+  scale_x_continuous(breaks = seq(2000, 2020, 2),  
+                     labels = seq(2000, 2020, 2))
+
+
+
+```
+
+
+
+```{r}
+# summarize the value and confidence interval of the coefficients in a table
+coef_summary <- summary(model2)$coefficients
+confint_summary <- confint(model2)
+
+# create a table of coefficient summaries
+summary_table <- tibble(
+  Name =row.names(coef_summary), 
+  Coefficients = coef_summary[,1],
+  `95% Confidence Interval Lower Bound` = confint_summary[,1],
+  `95% Confidence Interval Upper Bound` = confint_summary[,2]
+)[1:length(coef_summary[,1]),] # use the same length as the Coefficients column
+
+summary_table <- rownames_to_column(summary_table, var = "Variable")
+new_order <- c("Intercept", "Year", "Banking/Banks", "Broadcasting (Television, Radio, Internet)", "Communications", "Crown Corporations", "Energy/Mining/Mineral Processing", "Federal Public Services/Public Service Departments/Crown Corporations ", "Feed, Flour and Seed", "Grain Handling/Grain Elevators", "Indigenous", "Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Pipeline Transportation", "Postal Services/Postal Contractors", "Public Service Departments", "Rail Transportation", "Road Transportation", "Water Transportation (Shipping and Ferries)",  "Year: Banking/Banks", "Year: Broadcasting (Television, Radio, Internet)", "Year: Communications", "Year: Crown Corporations", "Year: Energy/Mining/Mineral Processing", "Year: Federal Public Services/Public Service Departments/Crown Corporations ", "Year: Feed, Flour and Seed", "Year: Grain Handling/Grain Elevators", "Year: Indigenous", "Year: Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Year: Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Year: Pipeline Transportation", "Year: Postal Services/Postal Contractors", "Year: Public Service Departments", "Year: Rail Transportation", "Year: Road Transportation", "Year: Water Transportation (Shipping and Ferries)")
+
+# Reorder the rows based on the new order
+summary_table$Variable <- factor(summary_table$Variable, levels = new_order)
+
+# Sort the table by the Variable column
+summary_table <- summary_table[order(summary_table$Variable),]
+
+# Rename the row names column
+summary_table <- rename(summary_table, "Variable Name" = "Variable") 
+
+
+```
+
+
+
+
+```{r}
+# display the summarized table
+summary_table %>%
+  kable(
+    caption = "Model Coefficients and 95 percent Confidence Interval",
+col.names=c(" ", "Coefficients", "Confidence Interval Lower Bound", "Confidence Interval Upper Bound"),
+linesep = "", digits = 1, booktabs=TRUE) %>%
+  kable_styling(latex_options = "HOLD_position", font_size = 8) %>%
+  column_spec(1, width = "18em") %>%
+  column_spec(2, width = "6em") %>%
+  column_spec(3, width = "12em") %>%
+  column_spec(4, width = "12em")
+  
+```
+# Discussion
+
+## First discussion point {#sec-first-point}
+
+If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
+## Second discussion point
+
+## Third discussion point
+
+## Weaknesses and next steps
+
+Weaknesses and next steps should also be included.
+
+\newpage
+
+\appendix
+
+# Appendix {-}
+
+# Model Testing
+
+R package "modelsummary"[@citemodelsummary] helps to display the coefficients of the two models as well as the result of a series of tests to compare which model performs better.
+
+$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @table-test, in Model 1, 84.5% of the variability is explained, and in Model 2, 87.4% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
+
+AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @table-test, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
+
+```{r}
+ 
 
 modelsummary(list("Model 1" = model1, 
                   "Model 2" = model2), 
@@ -142,7 +261,7 @@ modelsummary(list("Model 1" = model1,
 \newpage
 
 ```{r}
-library(kableExtra)
+#| label: table3
 # predict based on testing dataset
 pred1 <- predict(model1, newdata = injury_model_test)
 pred2 <- predict(model2, newdata = injury_model_test)
@@ -170,68 +289,29 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
 
 ```
 
+The RMSE measures how far the predicted values of the multiple linear regression model are from their actual values on average. The lower the RMSE, the better the model preforms regarding prediction. Based on @table3, the RMSE for both two models are very similar for training and testing dataset, indicating that the dataset is unbiased and the two models are performing as expected. Moreover, Model 2 has lower RMSE than Model 1 for both training and testing dataset, indicating that Model 2 predicts data more accurately.
+
+
 \newpage
+
+# Model Assumption Check
 
 ```{r}
 #| fig-width: 6
-#| fig-height: 8
+#| fig-height: 5
+#| label: figure3
 # plot the model to check for its assumptions
 par(mfrow = c(2, 2))
 plot(model2)
 ```
 
 
+Check for assumptions:
+Assumptions to the multiple linear regression model are checked to ensure that the model is valid for this dataset. @figure3 shows the plots used to check for the assumption.
 
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-```{r}
-#| label: fig-billssssss
-#| fig-cap: More bills of penguins
-#| echo: false
-#| fig-width: 12
-#| fig-height: 4
-
-cleaned_data %>%
-  filter(Industry != "CANADA") %>%
-  ggplot(aes(x=Year, y=injury_frequency_rate, colour = Industry))+
-  geom_point()+
-  theme_minimal()+
-  ylab("Injury Frequency Rate")+
-  geom_smooth(method='lm')+
-  scale_x_continuous(breaks = seq(2000, 2020, 2),  
-                     labels = seq(2000, 2020, 2))
-
-
-
-```
-
-# Discussion
-
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
+The Residuals vs Fitted plot checks for the linear relationship assumption. Since the red line is almost horizontal and there isn't any pattern, the model satisfies the linearity assumption. The Normal QQ plot checks for the residual normality assumption. Since almost all the dots are on the dashed line, the residuals follow a normal distribution. The Scale-Location plot checks for the homoscedasticity assumption. The red line is horizontal, and the dots are evenly scattered, indicating that the variance of the residuals is constant [@citecheck]. 
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional details
 
 
 \newpage
