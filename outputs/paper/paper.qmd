@@ -1,13 +1,11 @@
 ---
-title: "Evolution of injury fruquency rate in Canada"
-subtitle: "My subtitle if needed"
-author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+title: "Trends in Work-related Injury Frequency Rate in Canada"
+subtitle: "Maritime operations have experienced a notable decline, contributing to an overall downward trend "
+author: Missy Zhang
+thanks: "Code and data are available at: [https://github.com/MissyZhang/occupational_injury](https://github.com/MissyZhang/occupational_injury)."
 date: "`r Sys.time()`"
 date-format: "D MMMM YYYY"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper aims to examine the work-related injury frequency rate in Canada over the past 12 years. To explore whether and how injury rate has declined in Canada, this paper aims to investigate the relationship between time, industry, and work-related injury frequency rate in Canada. Using Statistics Canada data, it was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. In addition, this paper shares insights into injury prevention strategies for Canadian workplaces, and highlights the industries and worker populations that may be most vulnerable to workplace injuries. "
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -36,15 +34,21 @@ cleaned_data <- read_csv(here::here("inputs/data/cleaned_data.csv"))
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. For instance, @sec-data and @sec-first-point. 
+In recent years, work-related injuries have emerged as a critical issue in Canada, affecting workers across various industries. These injuries can have devastating physical and psychological impacts on workers and can also result in a significant economic burden on society. Despite a decrease in the number of injuries in recent years, there were still 37,024 work-related injuries reported in 2020 alone [@cite1]. To address this issue and improve workplace safety, it is crucial to understand injury trends over time and across different sectors. This report aims to analyze work-related injury data and explore factors that contribute to work-related injuries. By identifying areas that require improvement and highlighting successful initiatives, this report aims to contribute to the ongoing efforts to create safer workplaces and reduce the incidence of work-related injuries.
+
+This report utilizes data of injury statistics in Canada by industry sector from 2008 to 2020 obtained from the Open Government Data of Statistics Canada [@citeSC] and used programming language R [@citeR] to build models and analyze trends. The estimand of this report is work-related injury frequency rate, which is measured by injuries (disabling, fatal and minor) per one million hours worked. This paper delves into the overall trend of injury frequency rate in Canada by industry using multiple linear regression model. It was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. 
+
+
+The remainder of the paper is split into four sections. In @sec-data, the cleaned dataset is explored to identify key variables of interest, namely the year, industry, and injury frequency rate. Visualizations in the form of tables and figures are presented to illustrate potential correlations between these variables. Before constructing the multiple linear regression model in @sec-model, it is observed through data visualization that the injury frequency rate in Canada has generally decreased over time, albeit with variations across different industries. The final model is interpreted and findings on the evolution of injury frequency rate are presented in @sec-results. In @sec-discussion, the implications of these findings on time and industry are discussed, along with potential federal and provincial-level solutions and limitations of this study.
 
 
 
 # Data {#sec-data}
 
-Our data is of penguins (@fig-bills).
 
 ```{r}
+#| label: fig-year
+#| fig-cap: Work-related injury frequency rate by year in Canada from 2008 to 2020
 cleaned_data %>%
   filter(Industry == "CANADA") %>%
   ggplot(aes(x= Year, y= injury_frequency_rate)) +
@@ -57,8 +61,8 @@ cleaned_data %>%
 
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: fig-byin
+#| fig-cap: Work-related injury frequency rate by year and industry in Canada from 2008 to 2020
 #| fig-width: 12
 #| fig-height: 5
 
@@ -76,24 +80,9 @@ cleaned_data %>%
 ```
 
 
-
-
-
-
-Talk more about it.
-
-Also bills and their average (@fig-billssssss). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work.)
-
-
-
-Talk way more about it. 
-
-
-
-
 \newpage
 
-# Model
+# Model {#sec-model}
 
 ```{r}
 #| include: false
@@ -133,23 +122,9 @@ In Model @eq-bayes:
 - $\beta_{3}$ is the coefficient for the interaction term between $i^{th}$ year and industry $j$.
 - The baseline of this model is year 0 and Air Transportation industry.
 
-
-
-
-
-
-
-
-
-
-
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by  If we were interested in baseball data then could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
 \newpage
 
-# Results
+# Results {#sec-results}
 
 ```{r}
 #| label: fig-billssssss
@@ -179,6 +154,13 @@ cleaned_data %>%
 coef_summary <- summary(model2)$coefficients
 confint_summary <- confint(model2)
 
+row_names <- c("Intercept", "Banking/Banks", "Broadcasting (Television, Radio, Internet)", "Communications", "Crown Corporations", "Energy/Mining/Mineral Processing", "Federal Public Services/Public Service Departments/Crown Corporations ", "Feed, Flour and Seed", "Grain Handling/Grain Elevators", "Indigenous", "Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Pipeline Transportation", "Postal Services/Postal Contractors", "Public Service Departments", "Rail Transportation", "Road Transportation", "Water Transportation (Shipping and Ferries)", "Year" ,"Year: Banking/Banks", "Year: Broadcasting (Television, Radio, Internet)", "Year: Communications", "Year: Crown Corporations", "Year: Energy/Mining/Mineral Processing", "Year: Federal Public Services/Public Service Departments/Crown Corporations ", "Year: Feed, Flour and Seed", "Year: Grain Handling/Grain Elevators", "Year: Indigenous", "Year: Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Year: Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Year: Pipeline Transportation", "Year: Postal Services/Postal Contractors", "Year: Public Service Departments", "Year: Rail Transportation", "Year: Road Transportation", "Year: Water Transportation (Shipping and Ferries)")
+
+
+rownames(coef_summary) <- row_names
+rownames(confint_summary) <- row_names
+
+
 # create a table of coefficient summaries
 summary_table <- tibble(
   Name =row.names(coef_summary), 
@@ -187,17 +169,7 @@ summary_table <- tibble(
   `95% Confidence Interval Upper Bound` = confint_summary[,2]
 )[1:length(coef_summary[,1]),] # use the same length as the Coefficients column
 
-summary_table <- rownames_to_column(summary_table, var = "Variable")
-new_order <- c("Intercept", "Year", "Banking/Banks", "Broadcasting (Television, Radio, Internet)", "Communications", "Crown Corporations", "Energy/Mining/Mineral Processing", "Federal Public Services/Public Service Departments/Crown Corporations ", "Feed, Flour and Seed", "Grain Handling/Grain Elevators", "Indigenous", "Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Pipeline Transportation", "Postal Services/Postal Contractors", "Public Service Departments", "Rail Transportation", "Road Transportation", "Water Transportation (Shipping and Ferries)",  "Year: Banking/Banks", "Year: Broadcasting (Television, Radio, Internet)", "Year: Communications", "Year: Crown Corporations", "Year: Energy/Mining/Mineral Processing", "Year: Federal Public Services/Public Service Departments/Crown Corporations ", "Year: Feed, Flour and Seed", "Year: Grain Handling/Grain Elevators", "Year: Indigenous", "Year: Interprovincial Infrastructure (Bridges, Tunnels, Canals, Causeways)", "Year: Long shoring/Stevedoring/Port/Harbour Operations/Pilotage", "Year: Pipeline Transportation", "Year: Postal Services/Postal Contractors", "Year: Public Service Departments", "Year: Rail Transportation", "Year: Road Transportation", "Year: Water Transportation (Shipping and Ferries)")
 
-# Reorder the rows based on the new order
-summary_table$Variable <- factor(summary_table$Variable, levels = new_order)
-
-# Sort the table by the Variable column
-summary_table <- summary_table[order(summary_table$Variable),]
-
-# Rename the row names column
-summary_table <- rename(summary_table, "Variable Name" = "Variable") 
 
 
 ```
@@ -219,11 +191,15 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
   column_spec(4, width = "12em")
   
 ```
-# Discussion
 
-## First discussion point {#sec-first-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
+\newpage
+
+# Discussion {#sec-discussion}
+
+## First discussion point 
+
 
 ## Second discussion point
 
@@ -231,13 +207,13 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+
 
 \newpage
 
 \appendix
 
-# Appendix {-}
+# Appendix 
 
 # Model Testing
 
@@ -248,8 +224,6 @@ $R^2$ measures how well the model explains its response variable's variation. If
 AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @table-test, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
 
 ```{r}
- 
-
 modelsummary(list("Model 1" = model1, 
                   "Model 2" = model2), 
              fmt = 2,
@@ -261,7 +235,7 @@ modelsummary(list("Model 1" = model1,
 \newpage
 
 ```{r}
-#| label: table3
+
 # predict based on testing dataset
 pred1 <- predict(model1, newdata = injury_model_test)
 pred2 <- predict(model2, newdata = injury_model_test)
@@ -272,22 +246,24 @@ error2 <- injury_model_test$injury_frequency_rate - pred2
 RMSE1 <- sqrt(mean(error1^2))
 RMSE2 <- sqrt(mean(error2^2))
 
+```
 
-# construct a table to compare RMSE between different models and different sets
+```{r}
+#| label: table3
 table_RMSE <- tibble(dataset = c("train","test"),
                      `Model 1` = c(10.95, 15.89),
                      `Model 2` = c(6.66, 9.29))
 
-# display the table
+
 table_RMSE %>%
   kable(
     caption = "Comparing RMSE between two models",
 col.names=c("Dataset", "Model 1", "Model 2" ),
 linesep = "", digits = 1, booktabs=TRUE) %>%
   kable_styling(latex_options = "HOLD_position", font_size = 10)
-
-
 ```
+
+
 
 The RMSE measures how far the predicted values of the multiple linear regression model are from their actual values on average. The lower the RMSE, the better the model preforms regarding prediction. Based on @table3, the RMSE for both two models are very similar for training and testing dataset, indicating that the dataset is unbiased and the two models are performing as expected. Moreover, Model 2 has lower RMSE than Model 1 for both training and testing dataset, indicating that Model 2 predicts data more accurately.
 
