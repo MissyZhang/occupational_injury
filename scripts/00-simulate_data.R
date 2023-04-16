@@ -1,19 +1,23 @@
 #### Preamble ####
-# Purpose: Simulates... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Data: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Simulate injury rate data in Canada
+# Author: Missy Zhang
+# Data: 16 April 2023
+# Contact: mengze.zhang@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
+
 
 #### Simulate data ####
-# [...ADD CODE HERE...]
+set.seed(456)
+
+datasimu <- data.frame(
+  Industry = rep(c("A", "B", "C", "D"), each = 5),
+  Year = rep(2020:2016, 4),
+  injury_rate = sample(1:50, 20, replace = TRUE)
+)
 
 
 
