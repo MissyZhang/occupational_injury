@@ -22,5 +22,5 @@ cleaned_data <- subset(raw_data, !(`Operational Activity` %in% c("On-board", "Of
 
 
 #### Save data ####
-write_csv(cleaned_data, "inputs/data/cleaned_data.csv")
+write_csv(cleaned_data, "outputs/data/cleaned_data.csv")
 
