@@ -5,7 +5,7 @@ author: Missy Zhang
 thanks: "Code and data are available at: [https://github.com/MissyZhang/occupational_injury](https://github.com/MissyZhang/occupational_injury)."
 date: "`r Sys.time()`"
 date-format: "D MMMM YYYY"
-abstract: "This paper aims to examine the work-related injury frequency rate in Canada over the past 12 years. To explore whether and how injury rate has declined in Canada, this paper aims to investigate the relationship between time, industry, and work-related injury frequency rate in Canada. Using Statistics Canada data, it was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. In addition, this paper shares insights into injury prevention strategies for Canadian workplaces, and highlights the industries and worker populations that may be most vulnerable to workplace injuries. "
+abstract: "This paper aims to examine whether and how work-related injury rate has declined in Canada from 2008 to 2020. Using Statistics Canada data, it was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. In addition, this paper shares insights into injury prevention strategies for Canadian workplaces, and highlights the industries and worker populations that may be most vulnerable to workplace injuries. "
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -39,12 +39,39 @@ In recent years, work-related injuries have emerged as a critical issue in Canad
 This report utilizes data of injury statistics in Canada by industry sector from 2008 to 2020 obtained from the Open Government Data of Statistics Canada [@citeSC] and used programming language R [@citeR] to build models and analyze trends. The estimand of this report is work-related injury frequency rate, which is measured by injuries (disabling, fatal and minor) per one million hours worked. This paper delves into the overall trend of injury frequency rate in Canada by industry using multiple linear regression model. It was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. 
 
 
-The remainder of the paper is split into four sections. In @sec-data, the cleaned dataset is explored to identify key variables of interest, namely the year, industry, and injury frequency rate. Visualizations in the form of tables and figures are presented to illustrate potential correlations between these variables. Before constructing the multiple linear regression model in @sec-model, it is observed through data visualization that the injury frequency rate in Canada has generally decreased over time, albeit with variations across different industries. The final model is interpreted and findings on the evolution of injury frequency rate are presented in @sec-results. In @sec-discussion, the implications of these findings on time and industry are discussed, along with potential federal and provincial-level solutions and limitations of this study.
+The remainder of the paper is split into four sections. @sec-data explores the cleaned dataset and identifies key variables. Visualizations are presented to show correlations. @sec-model observes injury frequency rate has decreased over time before constructing the regression model. @sec-results presents model findings on injury frequency rate evolution. @sec-discussion discusses implications, solutions, and study limitations.
 
 
 
 # Data {#sec-data}
 
+## Data source and methodology
+
+The dataset provides a summary of occupational injury statistics and rates in the Canadian Federal Jurisdiction between 2008 and 2020, and it was sourced from the Open Government Portal of Statistics Canada. The data was collected from the Employer's Annual Hazardous Occurrence Report (EAHOR), which is submitted by federally regulated employers to the Labour Program. Under the Canada Labour Code, federal jurisdiction encompasses work and/or undertakings that fall under the legislative authority of the Parliament of Canada, including work deemed to be for the common good of at least two provinces and outside the exclusive authority of provincial legislatures @citeeahor. Industries under Federal Jurisdiction include interprovincial and international transportation, telecommunications and broadcasting, banks, postal services, feed, flour, seed and grain, miscellaneous industries, and first nation band councils and indigenous self-governments @citeind. One limitation of the survey methodology is that the it only captures incidents in industries under federal jurisdiction, which excludes provincially regulated workplaces and industries not classified as falling under federal jurisdiction. As a result, the dataset may not be representative of the entire Canadian workforce and could lead to an underestimation of the true incidence and severity of occupational injuries in Canada.
+
+The original dataset contains 317 observations and 16 variables with all kinds of information about injury statistics and rates. This report wants to focus on exploring the trend of injury rate and investigating the possible factors that may affect injury rate. Thus, I will be interested in the variables "Year", "Industry", and "Injury frequency rate". R [@citeR], and R packages "tidyverse" [@citetidyverse], "dplyr" [@citedplyr], and "kableExtra" [@citekableExtra] are utilized to create an extract of the cleaned dataset (@tbl-dataextract). 
+
+
+
+```{r}
+#| label: tbl-dataextract
+#| tbl-cap: Extracting the first ten rows from the Injury data
+# create a table showing the first ten rows of the cleaned data
+cleaned_data %>%
+  slice(1:10) %>%
+  kable(
+col.names=c("Industry", "Year", "Injury Frequency Rate"),
+linesep = "", digits = 1, booktabs=TRUE) %>%
+  kable_styling(latex_options = "HOLD_position", font_size = 10)
+```
+
+@tbl-dataextract shows the first ten rows of the cleaned dataset. It contains 231 observations and 3 variables in total. The injury frequency rate is measured by all occupational injuries (disabling, fatal and minor) per one million hours worked in a given industry and year.
+
+## Data Visualization
+
+In order to get further familiarized with the dataset and estimate the possible associations between the nation's injury rate and other factors, exploratory analysis is carried out by conducting data visualizations to observe whether the patterns between certain factors matches the generally expectations of the trend of injury rate in Canada. First, we will have a look through the overall trend of injury rate in Canada.
+
+\newpage
 
 ```{r}
 #| label: fig-year
@@ -59,6 +86,9 @@ cleaned_data %>%
                      labels = seq(2000, 2020, 2))
 ```
 
+As @fig-year has demonstrated, Canada's overall injury frequency rate has fluctuated downward since 2008, indicating an improvement in the safety performance of federally regulated workplaces. However, there were two notable periods of increase in the injury frequency rate in 2010-2012 and 2015-2016. Despite these increases, the average injury frequency rate in Canada decreased from 30 in 2008 to 17 in 2020, indicating an overall positive trend in occupational safety.
+
+\newpage 
 
 ```{r}
 #| label: fig-byin
@@ -79,10 +109,15 @@ cleaned_data %>%
 
 ```
 
+@fig-byin provides a breakdown of the data by different industries, revealing varying degrees of improvement in injury frequency rates over time. Notably, the Long shoring/Stevedoring/Port/Harbour Operations/Pilotage industry has shown the greatest decrease in injury frequency rate among all industries, as indicated by the blue dots on the figure. In contrast, Banking/Banks displays the smallest decrease in injury frequency rate, with a flatter slope in the figure. The differences in injury frequency rates among these industries can likely be attributed to variations in their work environments and tasks. For example, industries such as Long shoring/Stevedoring/Port/Harbour Operations/Pilotage may have implemented more rigorous safety protocols and procedures due to the inherently high-risk nature of their work, while Banking/Banks may not face the same physical hazards and thus may not have undergone the same level of safety improvements.
 
 \newpage
 
 # Model {#sec-model}
+
+By the exploratory analysis of the data, it was found that year and industry have some correlation with the injury frequency rate in Canada. The relationship seems to be linear as the figures generally demonstrate decreasing trends. Therefore, to further proceed the analysis and predict the future situation regarding injury rate, a multiple linear regression model will be constructed.
+
+Prior to constructing the model, the dataset is split into the training set and the testing set with a proportion of 8:2. The training set is used to build the multiple linear regression models, and the testing set is used to test the accuracy and unbiasedness of the model. R package "tidymodels"[@citetidymodels] is used to split the dataset.
 
 ```{r}
 #| include: false
@@ -108,6 +143,11 @@ model2 <- lm(injury_frequency_rate~Industry + Year + Industry*Year, data = injur
 
 ```
 
+Two models are initially constructed based on the different possible factors that might have an effect on injury frequency rate in Canada. The first model has continuous variable year, categorical variable industry as its predictor variables, and the injury frequency rate as its response variable. I would also like to check whether the variables year and industry are implicitly related. Therefore, the second model has continuous variable year, categorical variable industry, and the interaction between them as its predictor variables, and the injury frequency rate as its response variable. To compare these two models to find out which is more accurate and is better at prediction, AIC and BIC tests are carried out, and $R^2$ is examined. Furthermore, the testing dataset is used to test how the two models perform when extra data is involved. RMSE is measured by the testing data to compare the prediction power of the two models. In Appendix @sec-modeltesting, these tests are performed and the test statistics of the two models are compared to select the model with better performance.
+
+As a result, model 2 has a better performance than model 1, and is selected as the final model to model the behavior of Income inequality in Canada as time passed. The assumption check for the model is done in Appendix @sec-modelassu.
+
+The final model is displayed below:
 
 $$
 Y_{ij} = \beta_{0}+\beta_{1}Year_{i}+\beta_{2}Industry_{j}+\beta_{3}Year_{i}Industry_{j} 
@@ -127,8 +167,8 @@ In Model @eq-bayes:
 # Results {#sec-results}
 
 ```{r}
-#| label: fig-billssssss
-#| fig-cap: More bills of penguins
+#| label: fig-result
+#| fig-cap: Work-related injury frequency rate by year and industry in Canada from 2008 to 2020
 #| echo: false
 #| fig-width: 12
 #| fig-height: 6
@@ -213,21 +253,26 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
 
 \appendix
 
-# Appendix 
+# Appendix {-}
 
-# Model Testing
+
+
+
+# Model Testing {#sec-modeltesting}
 
 R package "modelsummary"[@citemodelsummary] helps to display the coefficients of the two models as well as the result of a series of tests to compare which model performs better.
 
-$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @table-test, in Model 1, 84.5% of the variability is explained, and in Model 2, 87.4% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
+$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @tbl-tabletest, in Model 1, 84.5% of the variability is explained, and in Model 2, 87.4% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
 
-AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @table-test, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
+AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @tbl-tabletest, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
+
 
 ```{r}
+#| label: tbl-tabletest
+#| tbl-cap: Comparing Model 1 and Model 2's Statistics
 modelsummary(list("Model 1" = model1, 
                   "Model 2" = model2), 
              fmt = 2,
-             title = "Comparing Model 1 and Model 2's Statistics",
              output = "markdown")
 
 ```
@@ -249,7 +294,8 @@ RMSE2 <- sqrt(mean(error2^2))
 ```
 
 ```{r}
-#| label: table3
+#| label: tbl-table3
+#| tbl-cap: Comparing RMSE between two models
 table_RMSE <- tibble(dataset = c("train","test"),
                      `Model 1` = c(10.95, 15.89),
                      `Model 2` = c(6.66, 9.29))
@@ -257,35 +303,37 @@ table_RMSE <- tibble(dataset = c("train","test"),
 
 table_RMSE %>%
   kable(
-    caption = "Comparing RMSE between two models",
 col.names=c("Dataset", "Model 1", "Model 2" ),
 linesep = "", digits = 1, booktabs=TRUE) %>%
   kable_styling(latex_options = "HOLD_position", font_size = 10)
 ```
 
 
-
-The RMSE measures how far the predicted values of the multiple linear regression model are from their actual values on average. The lower the RMSE, the better the model preforms regarding prediction. Based on @table3, the RMSE for both two models are very similar for training and testing dataset, indicating that the dataset is unbiased and the two models are performing as expected. Moreover, Model 2 has lower RMSE than Model 1 for both training and testing dataset, indicating that Model 2 predicts data more accurately.
+The RMSE measures how far the predicted values of the multiple linear regression model are from their actual values on average. The lower the RMSE, the better the model preforms regarding prediction. Based on @tbl-table3, the RMSE for both two models are very similar for training and testing dataset, indicating that the dataset is unbiased and the two models are performing as expected. Moreover, Model 2 has lower RMSE than Model 1 for both training and testing dataset, indicating that Model 2 predicts data more accurately.
 
 
 \newpage
 
-# Model Assumption Check
+
+
+
+# Model Assumption Check {#sec-modelassu}
 
 ```{r}
 #| fig-width: 6
 #| fig-height: 5
-#| label: figure3
+#| label: fig-figure3
+#| fig-cap: Checking the assumptions of linear model
 # plot the model to check for its assumptions
 par(mfrow = c(2, 2))
 plot(model2)
 ```
 
-
 Check for assumptions:
-Assumptions to the multiple linear regression model are checked to ensure that the model is valid for this dataset. @figure3 shows the plots used to check for the assumption.
+Assumptions to the multiple linear regression model are checked to ensure that the model is valid for this dataset. @fig-figure3 shows the plots used to check for the assumption.
 
 The Residuals vs Fitted plot checks for the linear relationship assumption. Since the red line is almost horizontal and there isn't any pattern, the model satisfies the linearity assumption. The Normal QQ plot checks for the residual normality assumption. Since almost all the dots are on the dashed line, the residuals follow a normal distribution. The Scale-Location plot checks for the homoscedasticity assumption. The red line is horizontal, and the dots are evenly scattered, indicating that the variance of the residuals is constant [@citecheck]. 
+
 
 \newpage
 
