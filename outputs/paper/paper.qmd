@@ -27,7 +27,7 @@ library(kableExtra)
 library(dplyr)
 
 # Read inputs
-cleaned_data <- read_csv(here::here("inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(here::here("outputs/data/cleaned_data.csv"))
 
 ```
 
@@ -36,7 +36,7 @@ cleaned_data <- read_csv(here::here("inputs/data/cleaned_data.csv"))
 
 In recent years, work-related injuries have emerged as a critical issue in Canada, affecting workers across various industries. These injuries can have devastating physical and psychological impacts on workers and can also result in a significant economic burden on society. Despite a decrease in the number of injuries in recent years, there were still 37,024 work-related injuries reported in 2020 alone [@cite1]. To address this issue and improve workplace safety, it is crucial to understand injury trends over time and across different sectors. This report aims to analyze work-related injury data and explore factors that contribute to work-related injuries. By identifying areas that require improvement and highlighting successful initiatives, this report aims to contribute to the ongoing efforts to create safer workplaces and reduce the incidence of work-related injuries.
 
-This report utilizes data of injury statistics in Canada by industry sector from 2008 to 2020 obtained from the Open Government Data of Statistics Canada [@citeSC] and used programming language R [@citeR] to build models and analyze trends. The estimand of this report is work-related injury frequency rate, which is measured by injuries (disabling, fatal and minor) per one million hours worked. This paper delves into the overall trend of injury frequency rate in Canada by industry using multiple linear regression model. It was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. 
+This report utilizes data of injury statistics in Canada by industry sector from 2008 to 2020 obtained from the Open Government Data of Statistics Canada [@citeSC] and used programming language `R` [@citeR] to build models and analyze trends. The estimand of this report is work-related injury frequency rate, which is measured by injuries (disabling, fatal and minor) per one million hours worked. This paper delves into the overall trend of injury frequency rate in Canada by industry using multiple linear regression model. It was found that there was an overall downward trend in the frequency of injuries over time, with the decline most pronounced in maritime operations. Particularly, it is closely related to the proportion of outdoor workers in the industry. 
 
 
 The remainder of the paper is split into four sections. @sec-data explores the cleaned dataset and identifies key variables. Visualizations are presented to show correlations. @sec-model observes injury frequency rate has decreased over time before constructing the regression model. @sec-results presents model findings on injury frequency rate evolution. @sec-discussion discusses implications, solutions, and study limitations.
@@ -49,7 +49,7 @@ The remainder of the paper is split into four sections. @sec-data explores the c
 
 The dataset provides a summary of occupational injury statistics and rates in the Canadian Federal Jurisdiction between 2008 and 2020, and it was sourced from the Open Government Portal of Statistics Canada. The data was collected from the Employer's Annual Hazardous Occurrence Report (EAHOR), which is submitted by federally regulated employers to the Labour Program. Under the Canada Labour Code, federal jurisdiction encompasses work and/or undertakings that fall under the legislative authority of the Parliament of Canada, including work deemed to be for the common good of at least two provinces and outside the exclusive authority of provincial legislatures @citeeahor. Industries under Federal Jurisdiction include interprovincial and international transportation, telecommunications and broadcasting, banks, postal services, feed, flour, seed and grain, miscellaneous industries, and first nation band councils and indigenous self-governments @citeind. One limitation of the survey methodology is that the it only captures incidents in industries under federal jurisdiction, which excludes provincially regulated workplaces and industries not classified as falling under federal jurisdiction. As a result, the dataset may not be representative of the entire Canadian workforce and could lead to an underestimation of the true incidence and severity of occupational injuries in Canada.
 
-The original dataset contains 317 observations and 16 variables with all kinds of information about injury statistics and rates. This report wants to focus on exploring the trend of injury rate and investigating the possible factors that may affect injury rate. Thus, I will be interested in the variables "Year", "Industry", and "Injury frequency rate". R [@citeR], and R packages "tidyverse" [@citetidyverse], "dplyr" [@citedplyr], and "kableExtra" [@citekableExtra] are utilized to create an extract of the cleaned dataset (@tbl-dataextract). 
+The original dataset contains 317 observations and 16 variables with all kinds of information about injury statistics and rates. This report wants to focus on exploring the trend of injury rate and investigating the possible factors that may affect injury rate. Thus, I will be interested in the variables "Year", "Industry", and "Injury frequency rate". `R` [@citeR], and R packages `tidyverse` [@citetidyverse], `dplyr`[@citedplyr], and `kableExtra` [@citekableExtra] are utilized to create an extract of the cleaned dataset (@tbl-dataextract). 
 
 
 
@@ -117,7 +117,7 @@ cleaned_data %>%
 
 By the exploratory analysis of the data, it was found that year and industry have some correlation with the injury frequency rate in Canada. The relationship seems to be linear as the figures generally demonstrate decreasing trends. Therefore, to further proceed the analysis and predict the future situation regarding injury rate, a multiple linear regression model will be constructed.
 
-Prior to constructing the model, the dataset is split into the training set and the testing set with a proportion of 8:2. The training set is used to build the multiple linear regression models, and the testing set is used to test the accuracy and unbiasedness of the model. R package "tidymodels"[@citetidymodels] is used to split the dataset.
+Prior to constructing the model, the dataset is split into the training set and the testing set with a proportion of 8:2. The training set is used to build the multiple linear regression models, and the testing set is used to test the accuracy and unbiasedness of the model. R package `tidymodels` [@citetidymodels] is used to split the dataset.
 
 ```{r}
 #| include: false
@@ -165,6 +165,10 @@ In Model @eq-bayes:
 \newpage
 
 # Results {#sec-results}
+
+Model @eq-bayes is eventually selected that better demonstrates the correlation between year, industry, and the injury frequency rate in Canada. @fig-result presents a visualization of this multiple linear regression model, where each line represents the trend of injury frequency rate over time for a specific industry. The figure shows that injury frequency rate generally decreases as the year increases, indicating an improvement in workplace safety over time. 
+Additionally, we can see that different industries have varying injury frequency rates, suggesting that industry type is also a significant factor in workplace safety.
+
 
 ```{r}
 #| label: fig-result
@@ -214,14 +218,15 @@ summary_table <- tibble(
 
 ```
 
-
+@tbl-sum displays the coefficients of the predictor variables in Model @eq-bayes. The model uses year 0 and the Air Transportation industry as the reference point and includes an interaction term between year and Air Transportation. The model sets a strict minimum value of 2008 for the "Year" variable. To estimate the injury frequency rate in industries other than Air Transportation, we need to consider the coefficients $\beta_2$ and $\beta_3$ which indicate the industry and the interaction between year and the specified industry, respectively. The coefficient values for these variables can be found in @tbl-sum under the "Coefficients" column.
 
 
 ```{r}
+#| label: tbl-sum
+#| tbl-cap: Model Coefficients and 95 percent Confidence Interval
 # display the summarized table
 summary_table %>%
   kable(
-    caption = "Model Coefficients and 95 percent Confidence Interval",
 col.names=c(" ", "Coefficients", "Confidence Interval Lower Bound", "Confidence Interval Upper Bound"),
 linesep = "", digits = 1, booktabs=TRUE) %>%
   kable_styling(latex_options = "HOLD_position", font_size = 8) %>%
@@ -232,21 +237,34 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
   
 ```
 
-
+As @tbl-sum shows, with the exception of Banking/Banks and Broadcasting (Television, Radio, Internet), all other industries experienced a decrease in injury frequency rates. The industry with the largest decline in injury frequency rates is Long shoring/Stevedoring/Port/Harbour Operations/Pilotage, with a reduction of 9.7 for every one unit increase in the "year" variable. After Long shoring/Stevedoring/Port/Harbour Operations/Pilotage, the industries with the second fastest decline in injury frequency rates are Water Transportation (Shipping and Ferries) and Energy/Mining/Mineral Processing. For every one unit increase in the "year" variable, their estimated injury frequency rates decreased by 4.2. On the other hand, Banking/Banks and Broadcasting (Television, Radio, Internet) have demonstrated the lowest decline in injury frequency rates over time. Specifically, as the "Year" variable increases by 1, the estimated injury frequency rates remain relatively stable in these sectors. While Long shoring/Stevedoring/Port/Harbour Operations/Pilotage had the highest estimated injury frequency rate earlier in 2008, the situation has changed over time. As of the end of 2020, the Postal Services/Postal Contractors industry has surpassed them, becoming the industry with the highest estimated injury frequency rate.
 
 \newpage
 
 # Discussion {#sec-discussion}
 
-## First discussion point 
+## Trends in injury frequency rate by year
 
+In @sec-results, we have talked about the outcome of the model, which is that time is the main factor decreasing the work-related injury frequency rate in Canada. Between 2008 and 2020, the injury frequency rate has decreased from 30.03 to 17.03 for 13. This could be due to the implementation of stricter safety regulations and guidelines in the workplace. In Canada, the Occupational Health and Safety (OHS) regulations have been in place since the 1970s and are updated annually since 2006 to keep up with new technologies and hazards [@cite2]. These regulations aim to ensure that employers provide a safe working environment for their workers, and that employees are trained to recognize and mitigate potential hazards and risks. Over the years, the regulations have evolved to address emerging issues and promote safe work practices.
 
-## Second discussion point
+Another contributing factor to the decline in work-related injuries in Canada is the increase in technology and automation in the workplace. With advancements in technology, many of the physically demanding jobs that were once commonplace have been automated, leading to a reduction in physical injuries in the workplace [@cite3]. This shift towards automation has also led to an increase in the demand for workers with technological skills, leading to a decline in physical and manual labour jobs [@cite4].
 
-## Third discussion point
+However, despite the decline in work-related injuries, there are potential problems that may arise as a result. For example, the decrease in work-related injuries may lead to complacency in the workplace, where employees may become less vigilant about safety protocols. Additionally, the decrease in work-related injuries may also lead to a lack of attention and resources towards workplace safety, as some employers may view it as less of a priority.
+
+Even with the advancements in technology and automation, there are still potential hazards and risks that need to be addressed. Regular safety audits and risk assessments can help identify potential hazards and mitigate them before they become a problem. Employers should also provide regular training and education to their employees to ensure they are aware of potential hazards and know how to properly use equipment and machinery. Finally, it's important to create a culture of safety in the workplace, where all employees are encouraged to prioritize safety and report any potential hazards or incidents. By doing so, employers can ensure that their employees are working in a safe and healthy environment, while also reducing the risk of work-related injuries and accidents.
+
+## The role of industry
+
+After analyzing the decrease in injury frequency rates across various industries, our findings show that Long shoring/Stevedoring/Port/Harbour Operations/Pilotage has experienced the highest rate of decrease in injury frequency rate, followed by Water Transportation (Shipping and Ferries) and Energy/Mining/Mineral Processing. However, Banking/Banks and Broadcasting (Television, Radio, Internet) have relatively stable injury frequency rates. This disparity suggests that certain industries prioritize mitigating work-related hazards more than others.
+
+For example, despite ranking first in injury frequency rate in 2008, Long shoring/Stevedoring/ Port/Harbour Operations/Pilotage has shown a significant decrease in injury frequency rate over the years. This improvement can be attributed to the implementation of strict safety regulations and protocols and the adoption of new technologies to reduce manual labor. In contrast, the relatively stable injury frequency rates in Banking/Banks and Broadcasting (Television, Radio, Internet) could indicate a lack of prioritization in implementing measures to mitigate work-related injuries. While these industries are generally safe, they can still lead to injuries such as musculoskeletal disorders caused by prolonged sitting and computer use.
+ 
 
 ## Weaknesses and next steps
 
+The paper delves into injury frequency rates in industries under federal jurisdiction in Canada. However, it acknowledges that the data may not accurately reflect the true incidence and severity of occupational injuries in Canada, as it only considers a subset of the workforce. Therefore, the findings must be interpreted with caution when extrapolated to the broader population. To address the limitation of the survey methodology, future research could include data from provincially regulated workplaces and industries not classified as falling under federal jurisdiction to provide a more comprehensive analysis of work-related injuries in Canada.
+
+This paper analyzed how injury frequency rate in Canada is affected by time and different industries. However, injury frequency rate is only an aspect of work-related injury. Other aspects of work-related injury include the severity of injuries, the types of injuries, and the long-term impacts on the affected workers. Future research could explore these variations and provide a more comprehensive understanding of work-related injuries in Canada.
 
 
 \newpage
@@ -255,14 +273,11 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
 
 # Appendix {-}
 
-
-
-
 # Model Testing {#sec-modeltesting}
 
-R package "modelsummary"[@citemodelsummary] helps to display the coefficients of the two models as well as the result of a series of tests to compare which model performs better.
+R package `modelsummary` [@citemodelsummary] helps to display the coefficients of the two models as well as the result of a series of tests to compare which model performs better.
 
-$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @tbl-tabletest, in Model 1, 84.5% of the variability is explained, and in Model 2, 87.4% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
+$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @tbl-tabletest, in Model 1, 81.7% of the variability is explained, and in Model 2, 93.2% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
 
 AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @tbl-tabletest, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
 
@@ -333,9 +348,6 @@ Check for assumptions:
 Assumptions to the multiple linear regression model are checked to ensure that the model is valid for this dataset. @fig-figure3 shows the plots used to check for the assumption.
 
 The Residuals vs Fitted plot checks for the linear relationship assumption. Since the red line is almost horizontal and there isn't any pattern, the model satisfies the linearity assumption. The Normal QQ plot checks for the residual normality assumption. Since almost all the dots are on the dashed line, the residuals follow a normal distribution. The Scale-Location plot checks for the homoscedasticity assumption. The red line is horizontal, and the dots are evenly scattered, indicating that the variance of the residuals is constant [@citecheck]. 
-
-
-\newpage
 
 
 \newpage
