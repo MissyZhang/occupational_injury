@@ -275,11 +275,11 @@ This paper analyzed how injury frequency rate in Canada is affected by time and 
 
 # Model Testing {#sec-modeltesting}
 
-R package `modelsummary` [@citemodelsummary] helps to display the coefficients of the two models as well as the result of a series of tests to compare which model performs better.
+The `modelsummary` R package [@citemodelsummary] is a useful tool for displaying the coefficients of two models, as well as conducting various tests to compare their performance.
 
-$R^2$ measures how well the model explains its response variable's variation. If $R^2$ is low, it indicates that the model doesn't fit the data well. By @tbl-tabletest, in Model 1, 81.7% of the variability is explained, and in Model 2, 93.2% of the variability is explained. Both models demonstrate a pretty high $R^2$ value.
+The coefficient of determination ($R^2$) is a statistical measure that indicates how well a model explains the variation in its response variable. A low $R^2$ value suggests that the model does not fit the data well. As per @tbl-tabletest, Model 1 explains 81.7% of the variability, while Model 2 explains 93.2% of the variability. Both models exhibit a relatively high $R^2$ value, indicating their good explanatory power.
 
-AIC and BIC measure the prediction ability of the multiple linear regression model. AIC (Akaike’s Information Criteria) focuses on how well the model fits unknown data, while BIC (Bayesian Information Criteria) focuses on the true model and favours simpler models [@citeAIC]. Lower AIC and BIC both indicate that the model has better prediction power. By @tbl-tabletest, Model 2 has slightly lower AIC and BIC than Model 1, implying that Model 2 has more prediction power.
+AIC (Akaike's Information Criteria) and BIC (Bayesian Information Criteria) are measures of the prediction ability of a multiple linear regression model. AIC focuses on the model's ability to fit unknown data, while BIC considers the true model and favors simpler models [@citeAIC]. Lower AIC and BIC values suggest better prediction power of the model. According to @tbl-tabletest, Model 2 has slightly lower AIC and BIC values compared to Model 1, suggesting that Model 2 has stronger prediction capabilities.
 
 
 ```{r}
@@ -324,7 +324,7 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
 ```
 
 
-The RMSE measures how far the predicted values of the multiple linear regression model are from their actual values on average. The lower the RMSE, the better the model preforms regarding prediction. Based on @tbl-table3, the RMSE for both two models are very similar for training and testing dataset, indicating that the dataset is unbiased and the two models are performing as expected. Moreover, Model 2 has lower RMSE than Model 1 for both training and testing dataset, indicating that Model 2 predicts data more accurately.
+The RMSE (Root Mean Square Error) is a statistical measure that quantifies the average deviation between the predicted values of a multiple linear regression model and their corresponding actual values. A lower RMSE indicates better predictive performance of the model. Upon analysis of @tbl-table3, it can be observed that the RMSE values for both models are comparable in both the training and testing datasets, suggesting that the dataset is unbiased and the models are performing as expected. Furthermore, Model 2 demonstrates lower RMSE values compared to Model 1 in both the training and testing datasets, suggesting that Model 2 exhibits more accurate predictions of the data.
 
 
 \newpage
@@ -342,12 +342,18 @@ The RMSE measures how far the predicted values of the multiple linear regression
 # plot the model to check for its assumptions
 par(mfrow = c(2, 2))
 plot(model2)
+
 ```
 
-Check for assumptions:
-Assumptions to the multiple linear regression model are checked to ensure that the model is valid for this dataset. @fig-figure3 shows the plots used to check for the assumption.
+The multiple linear regression model's assumptions were thoroughly examined to ensure its validity for the dataset, as shown in @fig-figure3. 
 
-The Residuals vs Fitted plot checks for the linear relationship assumption. Since the red line is almost horizontal and there isn't any pattern, the model satisfies the linearity assumption. The Normal QQ plot checks for the residual normality assumption. Since almost all the dots are on the dashed line, the residuals follow a normal distribution. The Scale-Location plot checks for the homoscedasticity assumption. The red line is horizontal, and the dots are evenly scattered, indicating that the variance of the residuals is constant [@citecheck]. 
+The Residuals vs. Fitted plot (top-left) displays a mostly horizontal line with no noticeable patterns, indicating a linear relationship between the dependent and independent variables. 
+
+The Normal Q-Q plot (top-right) reveals that most points fall along the dashed line, although there is a notable number of points deviating from the line on the right tail end, suggesting that the residuals may not be perfectly normally distributed. 
+
+The Scale-Location plot (bottom-left) exhibits a non-horizontal red line, indicating that the variance of the residuals changes as the fitted values vary. This suggests a potential violation of the homoscedasticity assumption, which assumes that the residuals' variance is consistent across all X values. An alternative model was attempted with a square-root transformation of the dependent variable, but the issue of heteroscedasticity persisted. 
+
+The Residuals vs. Leverage plot (bottom-right) identified two outliers with Cook's distances exceeding the threshold at points 146 and 161, as well as one influential point at point 111.
 
 
 \newpage
