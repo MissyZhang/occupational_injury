@@ -1,4 +1,4 @@
-# Investigating the Trens of Work-related Injury Rate in Canada
+# Investigating the Trends of Work-related Injury Rate in Canada
 
 ## Paper Overview
 
